@@ -1,6 +1,9 @@
 # E - Commerce application using React and Express
 
-#Technologies used
-*React
-*Express
-PostgressSQL
+# Technologies used
+
+- React
+- Express
+- PostgressSQL
+- Tailwind css
+- Vite
