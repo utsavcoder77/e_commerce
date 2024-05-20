@@ -8,6 +8,7 @@ import submitAction from "../actions/submitAction";
 
 export default function Register() {
   const [passwordType, setPasswordType] = useState("password");
+  const [backendError, setbackendError] = useState()
   const {
     register,
     handleSubmit,
@@ -18,10 +19,19 @@ export default function Register() {
   });
 
   async function submitData(data) {
-    await submitAction(data);
+    setbackendError()
+    const respone = await submitAction(data);
+    const { success, error } = await respone.json()
+    if (error) {
+      setbackendError(error.messages.join(', '))
+    }
+    else if(success) {
+      
+      console.log(success.message)
+    }
   }
 
-  console.log({ errors });
+
 
   function togglePasswordType() {
     let newPasswordType = "text";
@@ -51,6 +61,10 @@ export default function Register() {
                 </Link>
               </p>
             </div>
+
+            {
+              backendError && <p className="text-red-500 text-sm mt-2">{ backendError }</p>
+            }
 
             <div className="mt-10">
               <div></div>
