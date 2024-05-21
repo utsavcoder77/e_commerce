@@ -1,17 +1,38 @@
 import { Link } from "react-router-dom";
 import Logo from "../Components/Logo";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import loginSchema from "../validationSchemas/loginSchema";
+import { useState } from "react";
+import SignInAction from "../actions/signInAction";
 
-export default function Register() {
+
+export default function Login() {
+const [backendError, setbackendError] = useState()
+ const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
+
+  async function submitData(data) {
+    setbackendError()
+    const respone = await SignInAction(data);
+    const { success, error } = await respone.json()
+    if (error) {
+      setbackendError(error.messages.join(', '))
+    }
+    else if(success) {
+      
+      console.log(success.message)
+    }
+  }
+
+
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex min-h-full flex-1">
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
@@ -33,7 +54,7 @@ export default function Register() {
 
             <div className="mt-10">
               <div>
-                <form action="#" method="POST" className="space-y-6">
+                <form onSubmit={handleSubmit(submitData)} className="space-y-6">
                   <div>
                     <label
                       htmlFor="email"
@@ -44,13 +65,17 @@ export default function Register() {
                     <div className="mt-2">
                       <input
                         id="email"
-                        name="email"
+                        {...register("email")}
                         type="email"
-                        autoComplete="email"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        
+                        className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
+                    {errors.email && (
+                      <span className="text-xs text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
                   </div>
 
                   <div>
@@ -63,13 +88,16 @@ export default function Register() {
                     <div className="mt-2">
                       <input
                         id="password"
-                        name="password"
+                        {...register("password")}
                         type="password"
-                        autoComplete="current-password"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
+                    {errors.password && (
+                      <span className="text-xs text-red-500">
+                        {errors.password.message}
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
