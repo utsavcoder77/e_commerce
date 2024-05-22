@@ -3,6 +3,7 @@ import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import ResetPassword from "./Pages/ResetPassword";
 import ChangePassword from "./Pages/ChangePassword";
+import Dashboard from "./Pages/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
   {
     path: "/change-password",
     element: <ChangePassword />,
+  },
+
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
 ]);
 

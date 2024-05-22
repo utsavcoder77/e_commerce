@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Components/Logo";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "../validationSchemas/loginSchema";
 import { useState } from "react";
 import SignInAction from "../actions/signInAction";
+import { useCookies } from 'react-cookie';
+import { useEffect } from "react";
 
 
 export default function Login() {
-const [backendError, setbackendError] = useState()
- const {
+  const navigate = useNavigate();
+  const [cookies, setCookies] = useCookies(['authToken']);
+  const [backendError, setbackendError] = useState()
+  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -20,15 +24,22 @@ const [backendError, setbackendError] = useState()
   async function submitData(data) {
     setbackendError()
     const respone = await SignInAction(data);
-    const { success, error } = await respone.json()
+    const { success, token, error } = await respone.json()
     if (error) {
       setbackendError(error.messages.join(', '))
     }
-    else if(success) {
-      
+    else if (success) {
       console.log(success.message)
+      setCookies("authToken", token)
+
     }
   }
+
+  useEffect(() => {
+    if (cookies.authToken) {
+      navigate("/dashboard")
+    }
+  }, [cookies, navigate]);
 
 
   return (
@@ -52,6 +63,10 @@ const [backendError, setbackendError] = useState()
               </p>
             </div>
 
+            {
+              backendError && <p className="text-red-500 text-sm mt-2">{backendError}</p>
+            }
+
             <div className="mt-10">
               <div>
                 <form onSubmit={handleSubmit(submitData)} className="space-y-6">
@@ -67,7 +82,7 @@ const [backendError, setbackendError] = useState()
                         id="email"
                         {...register("email")}
                         type="email"
-        
+
                         className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>

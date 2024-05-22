@@ -1,18 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Logo from "../Components/Logo";
 import registerSchema from "../validationSchemas/registerSchema";
 import { useState } from "react";
 import submitAction from "../actions/submitAction";
+import { useCookies } from 'react-cookie';
+import { useEffect } from "react";
 
 export default function Register() {
+  const navigate = useNavigate();
+  const [cookies, setCookies] = useCookies(['authToken']);
   const [passwordType, setPasswordType] = useState("password");
   const [backendError, setbackendError] = useState()
   const {
     register,
     handleSubmit,
-  
+
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
@@ -21,16 +25,22 @@ export default function Register() {
   async function submitData(data) {
     setbackendError()
     const respone = await submitAction(data);
-    const { success, error } = await respone.json()
+    const { success, token, error } = await respone.json()
     if (error) {
       setbackendError(error.messages.join(', '))
     }
-    else if(success) {
-      
+    else if (success) {
+
       console.log(success.message)
+      setCookies("authToken", token)
     }
   }
 
+  useEffect(() => {
+    if (cookies.authToken) {
+      navigate("/dashboard")
+    }
+  }, [cookies, navigate]);
 
 
   function togglePasswordType() {
@@ -63,7 +73,7 @@ export default function Register() {
             </div>
 
             {
-              backendError && <p className="text-red-500 text-sm mt-2">{ backendError }</p>
+              backendError && <p className="text-red-500 text-sm mt-2">{backendError}</p>
             }
 
             <div className="mt-10">
