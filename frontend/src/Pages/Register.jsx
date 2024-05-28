@@ -181,7 +181,7 @@ export default function Register() {
                     )}
                     <div
                       onClick={togglePasswordType}
-                      className="absolute inset-y-0 right-2 flex items-center"
+                      className="absolute inset-y-0 right-2 top-6 flex items-center"
                     >
                       <i className="fa-regular fa-eye"></i>
                     </div>
