@@ -33,6 +33,7 @@ async function createToken(id) {
     email: existingClient.email,
     mobile: existingClient.mobile
   }, process.env.TOKEN_SECRET_KEY)
+  return token
 }
 
 module.exports = { register, getOne, signIn, createToken };

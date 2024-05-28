@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Outlet, useNavigate } from "react-router-dom";
 import {
     Dialog,
     DialogPanel,
@@ -19,6 +20,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import ProfileDropDown from '../Components/ProfileDropDown'
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react'
 
 const navigation = [
     { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -41,6 +44,15 @@ function classNames(...classes) {
 
 export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const navigate = useNavigate();
+    const [cookies, setCookies] = useCookies(['authToken']);
+
+    useEffect(() => {
+        if (!cookies.authToken) {
+            navigate('/');
+        }
+    }, [cookies, navigate]);
+
 
     return (
         <>
@@ -286,7 +298,7 @@ export default function Dashboard() {
                     </div>
 
                     <main className="py-10">
-                        <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
+                        <div className="px-4 sm:px-6 lg:px-8"><Outlet /></div>
                     </main>
                 </div>
             </div>
