@@ -77,7 +77,6 @@ export default function Register() {
             }
 
             <div className="mt-10">
-              <div></div>
               <div>
                 <form onSubmit={handleSubmit(submitData)} className="space-y-6">
                   <div className="flex gap-10">
