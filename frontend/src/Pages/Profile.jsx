@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import profileSchema from "../validationSchemas/profileSchema";
 
+
 export default function Profile() {
     const {
         register,
